@@ -12,6 +12,13 @@ This project will make you smile. It allows you to use some download plugins for
 
 The list may grow, but at the moment, it's all about NSFW. Cyberdrop, GoFile, Thotslife and ThotHub are knowned to host some leaks about nudity, while Rule34, Pixiv and Fanbox are hosting some hentai arts.
 
+### Setup
+In order to make the project working without error, you need to install the modules in ``requirements.txt``. You can achieve this using the following command :
+
+```bash
+python3 -m pip install -r requirements.txt
+```
+
 ### Goal
 The goal of this project is to create script to download all content from a specific website and make it as a plugin using the Megaloader HTTP request, made using native modules only, and a validator to check that you're not wrongly using plugins.
 
