@@ -25,7 +25,7 @@ class GoFile:
                 "An error occured while extracting the Content ID from '" + url + "'.")
 
         url = "https://api.gofile.io/getContent?contentId=" + content_id + \
-            "&token=" + self.api_key + "&websiteToken=websiteToken&cache=true"
+            "&token=" + self.api_key + "&websiteToken=12345&cache=true"
 
         if password is not None:
             validate_password(password)
@@ -33,7 +33,7 @@ class GoFile:
             url += "&password=" + password
 
         resources = requests.get(url).json()
-
+        print(resources)
         if "contents" not in resources["data"].keys():
             raise GoFileErrorPageNotFound()
 

@@ -1,11 +1,12 @@
-from plugins import Cyberdrop
+from plugins import GoFile
 
 def main():
     output = "downloads"
-    short_code = "bAsFfpMA"
+    url = "https://gofile.io/d/CDruHU"
+    password = "None"
 
-    api = Cyberdrop()
-    for u in api.export(short_code):
+    api = GoFile()
+    for u in api.fetch_resources(url, password):
         api.download_file(u, output)
 
 if __name__ == "__main__":
