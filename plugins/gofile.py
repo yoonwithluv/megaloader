@@ -1,10 +1,6 @@
-import re
 import hashlib
 import requests
 from megaloader.http import http_download
-
-class GoFileErrorPageNotFound(Exception):
-    pass
 
 class GoFile:
 
