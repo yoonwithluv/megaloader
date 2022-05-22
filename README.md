@@ -11,6 +11,7 @@ This project will make you smile. It allows you to use some download plugins for
 - [ThotHub.VIP](http://www.thothub.vip/).
 - [ThotHub.TO](http://www.thothub.to/).
 - [Fapello](http://www.fapello.com/).
+
 The list may grow, but at the moment, it's all about NSFW. Cyberdrop, GoFile, Thotslife and ThotHub are knowned to host some leaks about nudity, while Rule34, Pixiv and Fanbox are hosting some hentai arts.
 
 ### Setup
