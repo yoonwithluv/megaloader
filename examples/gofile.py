@@ -1,10 +1,10 @@
-from plugins import Rule34
+from plugins import GoFile
 
 
 def main():
     output = "downloads"
-    tags = ["ahri"]
-    api = Rule34(tags)
+    url = "https://gofile.io/d/TfUVvH"
+    api = GoFile(url)
     for u in api.export():
         api.download_file(u, output)
 

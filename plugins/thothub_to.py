@@ -34,8 +34,7 @@ class ThothubTO:
             i += 1
 
     def get_video_from_page(self, page_url: str):
-        match = re.search(
-            r"https:\/\/thothub.to\/get_file\/\d+\/[a-f0-9]+\/\d+\/\d+\/\d+.mp4", requests.get(page_url).text)
+        match = re.search(r"https:\/\/thothub.to\/get_file\/\d+\/[a-f0-9]+\/\d+\/\d+\/\d+.mp4", requests.get(page_url).text)
         return None if match is None else match[0]
 
     def export(self, model: str):

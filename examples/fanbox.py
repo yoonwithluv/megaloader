@@ -1,10 +1,10 @@
-from plugins import Rule34
+from plugins import Fanbox
 
 
 def main():
     output = "downloads"
-    tags = ["ahri"]
-    api = Rule34(tags)
+    url = "https://artyom.fanbox.cc/"
+    api = Fanbox(url)
     for u in api.export():
         api.download_file(u, output)
 

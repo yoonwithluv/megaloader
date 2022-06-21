@@ -1,10 +1,10 @@
-from plugins import Rule34
+from plugins import Fapello
 
 
 def main():
     output = "downloads"
-    tags = ["ahri"]
-    api = Rule34(tags)
+    url = "https://fapello.com/arty-huang"
+    api = Fapello(url)
     for u in api.export():
         api.download_file(u, output)
 

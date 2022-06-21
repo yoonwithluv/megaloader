@@ -1,14 +1,66 @@
+import re
 import requests
+from megaloader.http import http_download
+
+BASE_API_URL = "https://api.fanbox.cc"
 
 class Fanbox:
-    BASE_API_URL = "https://api.fanbox.cc"
+    def __init__(self, url: str):
+        self.__creator = None
+        self.__creator_id = None
+        match = re.search(r"^https://([a-zA-Z0-9_\-\~]+)\.fanbox\.cc", url)
 
-    def __init__(self, creator_id: str):
-        self.creator_id = creator_id
+        if not match:
+            raise ValueError("Invalid fanbox url provided.")
+        self.__creator_id = match[1]
+        self.__creator = self.execute_api("/creator.get")
+
+    @property
+    def creator_id(self):
+        return self.__creator_id
+
+    @property
+    def creator(self):
+        return self.__creator
+
+    @property
+    def paginate_creator(self):
+        return self.execute_api("/post.paginateCreator")
+
+    @property
+    def banner(self):
+        return self.creator["coverImageUrl"]
+
+    @property
+    def posts(self):
+        for url in self.paginate_creator:
+            response = self.execute_api(url)
+            for post in response["items"]:
+                response = self.execute_api(
+                    "/post.info?postId=" + post["id"], False)
+                if "body" in response.keys() and response["body"] is not None \
+                    and "images" in response["body"].keys():
+                        for image in response["body"]["images"]:
+                            yield image["originalUrl"]
+                else:
+                    yield response["coverImageUrl"]
+
+    @property
+    def carousel(self):
+        response = self.execute_api("/creator.get")
+        for i in response["profileItems"]:
+            yield i["imageUrl"]
+
+    @property
+    def plan_thumbnails(self):
+        response = self.execute_api("/plan.listCreator")
+        for p in response:
+            if "coverImageUrl" in p and p["coverImageUrl"]:
+                yield p["coverImageUrl"]
 
     def execute_api(self, endpoint: str, required_creator_id: bool = True):
-        endpoint = endpoint.replace(self.BASE_API_URL, "")
-        url = self.BASE_API_URL + endpoint
+        endpoint = endpoint.replace(BASE_API_URL, "")
+        url = BASE_API_URL + endpoint
         if required_creator_id and "creatorId" not in url:
             url += ("&" if endpoint.startswith("?") else "?") + \
                 "creatorId=" + self.creator_id
@@ -25,43 +77,15 @@ class Fanbox:
         return response
 
     def export(self):
-        return [self.creator, self.banner, next(self.plan_thumbnails), next(self.carousel), next(self.posts)]
-    @property
+        yield self.banner
+        for e in self.plan_thumbnails:
+            yield e
+        for e in self.carousel:
+            yield e
+        for e in self.posts:
+            yield e
 
-    def creator(self):
-        return self.execute_api("/creator.get")
-    @property
-
-    def paginate_creator(self):
-        return self.execute_api("/post.paginateCreator")
-    @property
-
-    def banner(self):
-        return self.creator["coverImageUrl"]
-    @property
-
-    def posts(self):
-        for url in self.paginate_creator:
-            response = self.execute_api(url)
-            for post in response["items"]:
-                response = self.execute_api(
-                    "/post.info?postId=" + post["id"], False)
-                if "body" in response.keys() and response["body"] is not None \
-                    and "images" in response["body"].keys():
-                        for image in response["body"]["images"]:
-                            yield image["originalUrl"]
-                else:
-                    yield response["coverImageUrl"]
-    @property
-
-    def carousel(self):
-        response = self.execute_api("/creator.get")
-        for i in response["profileItems"]:
-            yield i["imageUrl"]
-    @property
-
-    def plan_thumbnails(self):
-        response = self.execute_api("/plan.listCreator")
-        for p in response:
-            if "coverImageUrl" in p and p["coverImageUrl"]:
-                yield p["coverImageUrl"]
+    def download_file(self, url: str, output: str):
+        http_download(url, output, custom_headers={
+            "Accept": "gzip, deflate, br"
+        })

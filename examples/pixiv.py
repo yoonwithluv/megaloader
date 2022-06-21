@@ -1,10 +1,10 @@
-from plugins import Rule34
+from plugins import Pixiv
 
 
 def main():
     output = "downloads"
-    tags = ["ahri"]
-    api = Rule34(tags)
+    url = "https://www.pixiv.net/en/users/5624416"
+    api = Pixiv(url)
     for u in api.export():
         api.download_file(u, output)
 
