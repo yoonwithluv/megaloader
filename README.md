@@ -38,48 +38,6 @@ If you want to support me in depth, you can [donate me here](https://www.paypal.
 
 # Snippets
 
-### Introduction
 Below, you will be able to see many snippets on existing plugins to see how it can be used. Sure, you're gonna need to see in depth the source code of each plugin because some don't work the same as other, since some websites asks for certain auth token, or else, and other don't.
 
-### Cyberdrop
-
-```python
-from plugins import Cyberdrop
-def main():
-    output = "downloads"
-    short_code = "CYBERDROP_FOLDER_ID"
-    api = Cyberdrop()
-    for u in api.export(short_code):
-        api.download_file(u, output)
-if __name__ == "__main__":
-    main()
-```
-
-### GoFile
-
-```python
-from plugins import GoFile
-def main():
-    output = "downloads"
-    url = "GOFILE_FOLDER_URL"
-    password = "PASSWORD_IF_REQUIRED" or None
-    api = GoFile()
-    for u in api.fetch_resources(url, password):
-        api.download_file(u, output)
-if __name__ == "__main__":
-    main()
-```
-
-### Rule34
-
-```python
-from plugins import Rule34
-def main():
-    output = "downloads"
-    tags = ["girl", "hot"] # tags example
-    api = Rule34(tags)
-    for u in api.export():
-        api.download_file(u, output)
-if __name__ == "__main__":
-    main()
-```
+Many snippets example are foundable at ``examples/``. You can open them, copy their code and paste it into the ``test.py`` file at the root of the project. Then, you can launch the script.
