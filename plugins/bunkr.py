@@ -1,12 +1,12 @@
 import re
-import requests
 import json
+import requests
 from megaloader.http import http_download
 
-REGEX_BUILD_ID_PATT = 'buildId":".+",'
+REGEX_BUILD_ID = r"<script id=\"__NEXT_DATA__\" type=\"application\/json\">(\{.*\})<\/script>"
 
 class Bunkr:
-    def __init__(self, url: str) -> None:
+    def __init__(self, url: str):
         self.__url = url
 
     @property
@@ -14,11 +14,11 @@ class Bunkr:
         return self.__url
 
     def getBuildId(self, resText):
-        return re.findall(REGEX_BUILD_ID_PATT, resText)[0].split(":")[1].strip(",").strip('"')
-    
+        return json.loads(re.search(REGEX_BUILD_ID, resText)[1])["buildId"]
+
     def getNextUrl(self, url, buildId, isAlbum = True):
         valToReplace = "/a/" if isAlbum else "/v/"
-        url = url.replace(valToReplace,f"/_next/data/{buildId}{valToReplace}") + ".json"
+        url = url.replace(valToReplace, f"/_next/data/{buildId}{valToReplace}") + ".json"
         return url
 
     def export(self):
@@ -29,7 +29,7 @@ class Bunkr:
             nextUrl = self.getNextUrl(self.url, buildId)
             files = json.loads(requests.get(nextUrl).text)["pageProps"]["files"]
             for url in files:
-                yield url["cdn"].replace("cdn","media-files")+"/"+url["name"]
+                yield url["cdn"].replace("cdn", "media-files") + '/' + url["name"]
         # is specific resource
         else:
             nextUrl = self.getNextUrl(self.url, buildId, False)

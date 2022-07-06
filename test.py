@@ -1,10 +1,10 @@
-from plugins import Rule34
+from plugins import Bunkr
 
 
 def main():
     output = "downloads"
-    tags = ["ahri"]
-    api = Rule34(tags)
+    url = "https://bunkr.is/a/KeCFxet1"
+    api = Bunkr(url)
     for u in api.export():
         api.download_file(u, output)
 
