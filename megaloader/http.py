@@ -1,6 +1,7 @@
 import os
 import shutil
 import requests
+from urllib.parse import unquote
 from .magic_table import __magic_tablify
 def __build_headers(url: str, custom_headers: dict = None, as_list: bool = False):
     headers = {
@@ -27,14 +28,17 @@ def __build_headers(url: str, custom_headers: dict = None, as_list: bool = False
         i += 1
     return headers_list
 
-def http_download(url: str, output_folder: str, custom_headers: dict = None):
+def http_download(url: str, output_folder: str, custom_headers: dict = None, headers_required = True):
+    url = unquote(url)
     filename = url.split('/')[-1].split('?')[0]
     filename = filename.replace("%20", ' ')
     output = os.path.join(output_folder, filename)
     if os.path.exists(output):
         return
     url = __magic_tablify(url)
-    headers = __build_headers(url, custom_headers)
+    headers = None
+    if headers_required:
+        headers = __build_headers(url, custom_headers)
     with requests.get(url, headers=headers, stream=True) as response_stream:
         if response_stream.status_code in (403, 404, 405, 500):
             return
